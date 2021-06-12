@@ -12,10 +12,10 @@ class MentionSubstitution(override val uid: String) extends Transformer with Str
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("MentionSubstitution"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
-    val filtered = f.udf((s: String) => s.replaceAll("@mention", "MENTION"))
+    val filtered = f.udf((s: String) => s.replaceAll("@\\S+", "MENTION"))
       .apply(f.col($(inputOutputCol)))
     dataset.drop($(inputOutputCol))
     dataset.withColumn($(inputOutputCol), filtered)

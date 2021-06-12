@@ -12,10 +12,10 @@ class HTMLRemover(override val uid: String) extends Transformer with StringMappa
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("HTMLRemover"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
-    val removed = f.udf((s: String) => s.replaceAll("<[^>]*>", ""))
+    val removed = f.udf((s: String) => s.replaceAll("<[^<>]*>", ""))
       .apply(f.col($(inputOutputCol)))
     dataset.drop($(inputOutputCol))
     dataset.withColumn($(inputOutputCol), removed)

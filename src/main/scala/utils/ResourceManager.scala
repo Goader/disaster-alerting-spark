@@ -14,7 +14,7 @@ object ResourceManager {
       source = Source.fromFile(getClass.getResource("/cleaning/abbrev.json").toURI)
     } catch {
       case e: Throwable => {
-        println(e.getMessage)
+        println("ERROR: " + e.getMessage)
         return None
       }
     }
@@ -23,7 +23,7 @@ object ResourceManager {
       json = Json.parse(source.getLines.mkString)
     } catch  {
       case e: Throwable => {
-        println(e.getMessage)
+        println("ERROR: " + e.getMessage)
         ok = false
       }
     } finally {

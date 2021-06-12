@@ -12,12 +12,15 @@ class PunctuationRemover(override val uid: String) extends Transformer with Stri
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("PunctuationRemover"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
     // TODO checkout regex
-    val filtered = f.udf((s: String) => s.replaceAll(raw"['`\"@#!?+&*\[\]-%.:/();$$=><|{}^]", " "))
-      .apply(f.col($(inputOutputCol)))
+    var filtered = f.col($(inputOutputCol))
+    for (sign <- "@#!?+&*[]-%.:/();$=><|{}^'`\"\\") {
+      filtered = f.udf((s: String) => s.replace(sign.toString, " "))
+        .apply(filtered)
+    }
     dataset.drop($(inputOutputCol))
     dataset.withColumn($(inputOutputCol), filtered)
   }

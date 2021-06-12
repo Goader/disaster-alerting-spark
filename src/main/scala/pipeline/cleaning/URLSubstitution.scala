@@ -12,7 +12,7 @@ class URLSubstitution(override val uid: String) extends Transformer with StringM
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("URLSubstitution"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
     val removed = f.udf((s: String) => s.replaceAll("https?://\\S+|www\\.\\S+", "URL"))

@@ -11,7 +11,7 @@ class LowerCaseTransformer(override val uid: String) extends Transformer with St
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("LowerCaseTransformer"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
     val lowered = f.lower(f.col($(inputOutputCol)))

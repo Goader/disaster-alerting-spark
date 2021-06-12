@@ -1,12 +1,12 @@
 package pipeline
 
 import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.feature.{StopWordsRemover, Tokenizer, Word2Vec}
+import org.apache.spark.ml.feature.{RegexTokenizer, StopWordsRemover, Tokenizer, Word2Vec}
 import org.apache.spark.sql.Dataset
 import pipeline.cleaning._
 
 object TweetEmbeddingPipeline {
-  def apply(dataset: Dataset[_]): Pipeline = {
+  def apply(): Pipeline = {
     val editingCol = "textEd"
 
     val copier = new ColumnCopy()
@@ -19,10 +19,16 @@ object TweetEmbeddingPipeline {
     val html = new HTMLRemover()
       .setInputOutputCol(editingCol)
 
+    val url = new URLSubstitution()
+      .setInputOutputCol(editingCol)
+
     val lower = new LowerCaseTransformer()
       .setInputOutputCol(editingCol)
 
     val abbrev = new AbbreviationSubstitution()
+      .setInputOutputCol(editingCol)
+
+    val smiley = new SmileySubstitution()
       .setInputOutputCol(editingCol)
 
     val mention = new MentionSubstitution()
@@ -31,47 +37,44 @@ object TweetEmbeddingPipeline {
     val number = new NumberSubstitution()
       .setInputOutputCol(editingCol)
 
-    val smiley = new SmileySubstitution()
-      .setInputOutputCol(editingCol)
-
     val punct = new PunctuationRemover()
       .setInputOutputCol(editingCol)
 
-    val tokenizer = new Tokenizer()
+    val tokenizer = new RegexTokenizer()
       .setInputCol(editingCol)
       .setOutputCol("tokenized")
+      .setPattern("\\s+")
 
     // TODO maybe add spell checker
 
     val stopwords = new StopWordsRemover()
       .setInputCol("tokenized")
-      .setOutputCol("tokenized")
+      .setOutputCol("cleaned")
 
     // training word2vec
     val word2vec = new Word2Vec()
-      .setInputCol("tokenized")
+      .setInputCol("cleaned")
       .setOutputCol("embeddings")
-      .setVectorSize(200)
+      .setVectorSize(100)
+      .setMinCount(1)
 
     // TODO maybe add some other hyperparameters
-
-    // TODO maybe we should not train it here, but outside
-    val word2vecModel = word2vec.fit(dataset)
 
     val pipeline = new Pipeline()
       .setStages(Array(
         copier,
         ascii,
         html,
+        url,
         lower,
         abbrev,
+        smiley,
         mention,
         number,
-        smiley,
         punct,
         tokenizer,
         stopwords,
-        word2vecModel
+        word2vec
       ))
 
     pipeline

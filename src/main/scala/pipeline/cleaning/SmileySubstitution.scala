@@ -12,13 +12,13 @@ class SmileySubstitution(override val uid: String) extends Transformer with Stri
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("SmileySubstitution"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
     val eyes = "[8:=;x]"
     val nose = "['`-]"
     val smileyRegexes = Map(
-      s"$eyes$nose?[(\\/]" -> "SADFACE",
+      s"$eyes$nose?[(\\\\/]" -> "SADFACE",
       s"$eyes$nose?[)dDp]" -> "SMILE",
       "<3" -> "LOVE"
     )

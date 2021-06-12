@@ -13,11 +13,13 @@ class ASCIIFilter(override val uid: String) extends Transformer with StringMappa
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("ASCIIFilter"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
-    val filtered = f.udf((s: String) => s.replaceAll("[^\\\\x00-\\\\x7F]", ""))
+    var filtered = f.udf((s: String) => s.replaceAll("[^\\u0000-\\u007F]+", ""))
       .apply(f.col($(inputOutputCol)))
+    filtered = f.udf((s: String) => s.replaceAll("[^\\x00-\\x7F]+", ""))
+      .apply(filtered)
     dataset.drop($(inputOutputCol))
     dataset.withColumn($(inputOutputCol), filtered)
   }

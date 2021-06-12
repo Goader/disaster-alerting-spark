@@ -1,11 +1,11 @@
 package pipeline.traits
 
 import org.apache.spark.ml.Transformer
-import org.apache.spark.ml.param.ParamMap
+import org.apache.spark.ml.param.{Param, ParamMap}
 import org.apache.spark.sql.types.{StringType, StructType}
 
-trait StringMappable {
-  val inputOutputCol: Param[String];
+trait StringMappable extends Transformer {
+  val inputOutputCol: Param[String]
 
   override def copy(extra: ParamMap): Transformer = {
     defaultCopy(extra)

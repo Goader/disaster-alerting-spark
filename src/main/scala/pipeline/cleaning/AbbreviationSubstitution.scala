@@ -14,7 +14,7 @@ class AbbreviationSubstitution(override val uid: String) extends Transformer wit
 
   def setInputOutputCol(value: String): this.type = set(inputOutputCol, value)
 
-  def this() = this(Identifiable.randomUID(this.getClass.getName))
+  def this() = this(Identifiable.randomUID("AbbreviationSubstitution"))
 
   override def transform(dataset: Dataset[_]): DataFrame = {
     val abbrevOpt = ResourceManager.readAbbreviations()
@@ -23,7 +23,7 @@ class AbbreviationSubstitution(override val uid: String) extends Transformer wit
     } else {
       var removed = f.col($(inputOutputCol));
       for ((k, v) <- abbrevOpt.get) {
-        removed = f.udf((s: String) => s.replaceAll(k, v))
+        removed = f.udf((s: String) => s.replaceAll(s"\\b$k\\b", v))
           .apply(removed)
       }
       dataset.drop($(inputOutputCol))
