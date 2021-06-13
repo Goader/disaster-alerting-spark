@@ -1,8 +1,5 @@
-import org.apache.spark.ml.feature.Word2Vec
-import org.apache.spark.sql.{SQLContext, SparkSession, functions => f}
-import org.apache.spark.ml.feature.{RegexTokenizer, Tokenizer}
-import pipeline.TweetEmbeddingPipeline
-import pipeline.cleaning.{ASCIIFilter, AbbreviationSubstitution, ColumnCopy, HTMLRemover, LowerCaseTransformer, MentionSubstitution, NumberSubstitution, PunctuationRemover, SmileySubstitution, URLSubstitution}
+import org.apache.spark.sql.SparkSession
+import model.pipeline.TweetEmbeddingPipeline
 
 object Application extends App {
   val sparkSession = SparkSession.builder()
@@ -18,7 +15,7 @@ object Application extends App {
     "8-\\ <3 x'D <meta class=\"sss\">text</meta> @mention approx asap fb j4f l8r"
   ).map(Tuple1.apply)).toDF("text")
 
-  val pipeline = TweetEmbeddingPipeline()
+  val pipeline = TweetEmbeddingPipeline("text")
   val model = pipeline.fit(documentDF)
   val res2 = model.transform(documentDF)
   res2.select("*").take(3).foreach(println)
