@@ -24,7 +24,7 @@ object ResourceManager {
   def loadModel(): Option[LogisticRegressionModel] = {
     val resource = getClass.getResource("/model/logistic_model")
     if (resource == null) None
-    else {println(resource.toURI.toString); Option(LogisticRegressionModel.load(resource.toURI.toString))}
+    else Option(LogisticRegressionModel.load(resource.toURI.toString))
   }
 
   def loadAbbreviations(): Option[Map[String, String]] = {
