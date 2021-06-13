@@ -1,5 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import model.pipeline.TweetEmbeddingPipeline
+import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
+import utils.ResourceManager
 
 object Application extends App {
   val sparkSession = SparkSession.builder()
@@ -20,4 +22,16 @@ object Application extends App {
   val res2 = model.transform(documentDF)
   res2.select("*").take(3).foreach(println)
 
+  val lr2 = LogisticRegressionModel.read.load("file:/C:/FILES_IN_USE/prj/twitter/target/scala-2.12/classes/model/logistic_model")
+
+  // just debugging, make sure it won't get into final code
+  val lrOpt = ResourceManager.loadModel()
+  if (lrOpt.isEmpty) {
+    println("ERROR: train a model first")
+    System.exit(-1);
+  }
+
+  val lr = lrOpt.get
+  println(lr.getRegParam)
+  println(lr.getElasticNetParam)
 }

@@ -1,5 +1,6 @@
 package utils
 
+import org.apache.spark.ml.classification.LogisticRegressionModel
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import play.api.libs.json._
 
@@ -20,8 +21,10 @@ object ResourceManager {
       .drop("location")
   }
 
-  def loadModel(): Unit = {
-    // TODO implement loadModel
+  def loadModel(): Option[LogisticRegressionModel] = {
+    val resource = getClass.getResource("/model/logistic_model")
+    if (resource == null) None
+    else {println(resource.toURI.toString); Option(LogisticRegressionModel.load(resource.toURI.toString))}
   }
 
   def loadAbbreviations(): Option[Map[String, String]] = {

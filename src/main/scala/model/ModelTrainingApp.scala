@@ -14,7 +14,7 @@ import utils.ResourceManager
 
 object ModelTrainingApp extends App {
   val sparkSession = SparkSession.builder()
-    .appName("twitter")
+    .appName("twitter_model")
     .master("local[*]")
     .getOrCreate()
 
@@ -46,9 +46,13 @@ object ModelTrainingApp extends App {
     .setFeaturesCol("embeddings")
     .setLabelCol("target")
 
+//  val paramGrid = new ParamGridBuilder()
+//    .addGrid(lr.regParam, Array(0.3, 0.1, 0.05, 0.01))
+//    .addGrid(lr.elasticNetParam, Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
+//    .build()
   val paramGrid = new ParamGridBuilder()
-    .addGrid(lr.regParam, Array(0.3, 0.1, 0.05, 0.01))
-    .addGrid(lr.elasticNetParam, Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
+    .addGrid(lr.regParam, Array(0.01))
+    .addGrid(lr.elasticNetParam, Array(0.0))
     .build()
 
   val cv = new CrossValidator()
@@ -75,7 +79,6 @@ object ModelTrainingApp extends App {
 
   // saving the model
   // saving model to resources, so that it can be used in the application
-  // note, that it may raise Exceptions, if it is already computed
   // it is written this way, as this file is treated as a script, not as a program
-  bestModel.save("src/main/resources/model/logistic.model")
+  bestModel.write.overwrite.save("src/main/resources/model/logistic_model")
 }
