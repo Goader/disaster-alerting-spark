@@ -5,7 +5,6 @@ import java.io.IOException
 import org.apache.spark.SparkContext
 import org.apache.spark.streaming.twitter.TwitterUtils
 import org.apache.spark.streaming.{Duration, StreamingContext}
-import twitter4j.{FilterQuery, TwitterStreamFactory}
 import twitter4j.auth.OAuthAuthorization
 import twitter4j.conf.ConfigurationBuilder
 import utils.ResourceManager

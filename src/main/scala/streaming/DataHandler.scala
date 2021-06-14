@@ -8,7 +8,7 @@ import twitter4j.Status
 
 class DataHandler private (val sparkSession: SparkSession, output: Dataset[_] => Unit) {
   val inputCol = "text"
-  val model = ModelPipeline(inputCol)
+  val model = ModelPipeline.loadTrained(sparkSession.sqlContext)
 
   def handle(rdd: RDD[Status]) = {
     val filteredLang = rdd.filter(status => status.getLang == "en")
@@ -19,9 +19,9 @@ class DataHandler private (val sparkSession: SparkSession, output: Dataset[_] =>
     ))
     val df = sparkSession.createDataFrame(rowRDD, schema)
 
-//    val transformed = model.transform(df)
+    val transformed = model.transform(df)
 
-//    output(transformed)
+    output(transformed)
   }
 }
 
@@ -34,9 +34,8 @@ object DataHandler {
     new DataHandler(sparkSession, (dataset: Dataset[_]) => {
       val filtered = dataset.filter(f.col("prediction") === 1)
       filtered.select("text").foreach(row => {
-        println("Tweet labeled as a disaster information:")
-        // TODO maybe update this
         println(row.mkString)
+        println("-".repeat(150))
       })
     })
   }

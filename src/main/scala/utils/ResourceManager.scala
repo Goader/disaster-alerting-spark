@@ -1,6 +1,8 @@
 package utils
 
+import org.apache.spark.ml.PipelineModel
 import org.apache.spark.ml.classification.LogisticRegressionModel
+import org.apache.spark.ml.feature.Word2VecModel
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import play.api.libs.json._
 
@@ -20,6 +22,18 @@ object ResourceManager {
       .drop("keyword")
       .drop("location")
   }
+
+  def loadWord2VecModel(): Option[Word2VecModel] = {
+    val resource = getClass.getResource("/model/word2vec_model")
+    if (resource == null) None
+    else Option(Word2VecModel.load(resource.toURI.toString))
+  }
+
+//  def loadModel(): Option[PipelineModel] = {
+//    val resource = getClass.getResource("/model/logistic_pipeline")
+//    if (resource == null) None
+//    else Option(PipelineModel.load(resource.toURI.toString))
+//  }
 
   def loadModel(): Option[LogisticRegressionModel] = {
     val resource = getClass.getResource("/model/logistic_model")
