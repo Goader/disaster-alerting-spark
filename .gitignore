@@ -1,0 +1,11 @@
+*.class
+*.log
+glove.twitter.27B.200d.txt
+.gitattributes
+.idea
+.bsp
+target/
+http-client
+**/auth.json
+
+tweets*.json
