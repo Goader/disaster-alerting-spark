@@ -1,5 +1,6 @@
 package streaming
 
+import org.apache.spark.sql.{functions => f}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.Dataset
 
@@ -18,7 +19,12 @@ object DataHandler {
   }
 
   def apply(): DataHandler = {
-    // TODO provide default function printing the positive tweets to stdout
-    null
+    new DataHandler((dataset: Dataset[_]) => {
+      val filtered = dataset.filter(f.col("prediction") === 1)
+      filtered.select("text").foreach(row => {
+        println("Tweet labeled as a disaster information:")
+        println(row.mkString)
+      })
+    })
   }
 }

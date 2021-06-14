@@ -1,6 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import model.pipeline.TweetEmbeddingPipeline
 import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
+import streaming.{DataHandler, TwitterStream}
 import utils.ResourceManager
 
 object Application extends App {
@@ -11,9 +12,9 @@ object Application extends App {
 
   sparkSession.sparkContext.setLogLevel("ERROR")
 
-  // TODO instance of data handler
+  val dataHandler = DataHandler()
 
-  // TODO instance of twitter stream
+  val twitterStream = TwitterStream(sparkSession.sparkContext, dataHandler)
 
   // TODO waiting to stop everything (for example waiting for Ctrl+C)
 }
