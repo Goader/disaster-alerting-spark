@@ -46,13 +46,9 @@ object ModelTrainingApp extends App {
     .setFeaturesCol("embeddings")
     .setLabelCol("target")
 
-//  val paramGrid = new ParamGridBuilder()
-//    .addGrid(lr.regParam, Array(0.3, 0.1, 0.05, 0.01))
-//    .addGrid(lr.elasticNetParam, Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
-//    .build()
   val paramGrid = new ParamGridBuilder()
-    .addGrid(lr.regParam, Array(0.01))
-    .addGrid(lr.elasticNetParam, Array(0.0))
+    .addGrid(lr.regParam, Array(0.3, 0.1, 0.05, 0.01))
+    .addGrid(lr.elasticNetParam, Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
     .build()
 
   val cv = new CrossValidator()
