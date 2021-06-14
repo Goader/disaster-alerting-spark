@@ -16,9 +16,8 @@ object Application extends App {
   try {
     twitterStream.start()
   } catch {
-    case e: Throwable => {
+    case e: Throwable =>
       println(e.getMessage)
-    }
   } finally {
     twitterStream.stop()
     sparkSession.stop()

@@ -21,7 +21,7 @@ class AbbreviationSubstitution(override val uid: String) extends Transformer wit
     if (abbrevOpt.isEmpty) {
       dataset.toDF()
     } else {
-      var removed = f.col($(inputOutputCol));
+      var removed = f.col($(inputOutputCol))
       for ((k, v) <- abbrevOpt.get) {
         removed = f.udf((s: String) => s.replaceAll(s"\\b$k\\b", v))
           .apply(removed)

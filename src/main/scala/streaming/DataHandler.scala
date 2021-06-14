@@ -1,6 +1,7 @@
 package streaming
 
 import model.ModelPipeline
+import org.apache.spark.ml.PipelineModel
 import org.apache.spark.sql.{Dataset, Row, SparkSession, functions => f}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
@@ -8,9 +9,9 @@ import twitter4j.Status
 
 class DataHandler private (val sparkSession: SparkSession, output: Dataset[_] => Unit) {
   val inputCol = "text"
-  val model = ModelPipeline.loadTrained(sparkSession.sqlContext)
+  val model: PipelineModel = ModelPipeline.loadTrained(sparkSession.sqlContext)
 
-  def handle(rdd: RDD[Status]) = {
+  def handle(rdd: RDD[Status]): Unit = {
     val filteredLang = rdd.filter(status => status.getLang == "en")
     val rowRDD = filteredLang.map((w: Status) => Row(w.getText))
 

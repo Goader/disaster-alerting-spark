@@ -26,7 +26,7 @@ class ColumnCopy(override val uid: String) extends Transformer {
       throw new Exception(s"Input type ${field.dataType} did not match input type StringType")
     }
 
-    schema.add(StructField($(outputCol), StringType, false))
+    schema.add(StructField($(outputCol), StringType, nullable = false))
   }
 
   override def transform(dataset: Dataset[_]): DataFrame = {

@@ -1,15 +1,11 @@
 package model
 
-import org.apache.spark.sql.{functions => f}
-import model.pipeline.TweetEmbeddingPipeline
-import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.PipelineModel
 import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
-import org.apache.spark.ml.feature.{HashingTF, Tokenizer, Word2VecModel}
+import org.apache.spark.ml.feature.Word2VecModel
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
-import org.apache.spark.sql.{Row, SparkSession}
-import org.apache.spark.ml.linalg.Vector
-import org.apache.spark.mllib.evaluation.{BinaryClassificationMetrics, MulticlassMetrics}
+import org.apache.spark.sql.{SparkSession, functions => f}
 import utils.ResourceManager
 
 object ModelTrainingApp extends App {
@@ -36,17 +32,11 @@ object ModelTrainingApp extends App {
   // data cleaning
   val pipeline = ModelPipeline("text")
 
-//  val paramGrid = new ParamGridBuilder()
-//    .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].regParam,
-//      Array(0.3, 0.1, 0.05, 0.01))
-//    .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].elasticNetParam,
-//      Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
-//    .build()
   val paramGrid = new ParamGridBuilder()
     .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].regParam,
-      Array(0.01))
+      Array(0.3, 0.1, 0.05, 0.01))
     .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].elasticNetParam,
-      Array(0.0))
+      Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
     .build()
 
   val cv = new CrossValidator()

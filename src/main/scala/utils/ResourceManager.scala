@@ -29,12 +29,6 @@ object ResourceManager {
     else Option(Word2VecModel.load(resource.toURI.toString))
   }
 
-//  def loadModel(): Option[PipelineModel] = {
-//    val resource = getClass.getResource("/model/logistic_pipeline")
-//    if (resource == null) None
-//    else Option(PipelineModel.load(resource.toURI.toString))
-//  }
-
   def loadModel(): Option[LogisticRegressionModel] = {
     val resource = getClass.getResource("/model/logistic_model")
     if (resource == null) None
@@ -49,19 +43,17 @@ object ResourceManager {
     try {
       source = Source.fromFile(getClass.getResource("/auth/auth.json").toURI)
     } catch {
-      case e: Throwable => {
+      case e: Throwable =>
         println("ERROR: " + e.getMessage)
         return None
-      }
     }
 
     try {
       json = Json.parse(source.getLines.mkString)
     } catch  {
-      case e: Throwable => {
+      case e: Throwable =>
         println("ERROR: " + e.getMessage)
         ok = false
-      }
     } finally {
       source.close()
     }
@@ -94,19 +86,17 @@ object ResourceManager {
     try {
       source = Source.fromFile(getClass.getResource("/cleaning/abbrev.json").toURI)
     } catch {
-      case e: Throwable => {
+      case e: Throwable =>
         println("ERROR: " + e.getMessage)
         return None
-      }
     }
 
     try {
       json = Json.parse(source.getLines.mkString)
     } catch  {
-      case e: Throwable => {
+      case e: Throwable =>
         println("ERROR: " + e.getMessage)
         ok = false
-      }
     } finally {
       source.close()
     }

@@ -11,12 +11,12 @@ import utils.ResourceManager
 import utils.TwitterAuthKeys._
 
 class TwitterStream private (val ssc: StreamingContext) {
-  def start() = {
+  def start(): Unit = {
     ssc.start()
     ssc.awaitTermination()
   }
 
-  def stop() = {
+  def stop(): Unit = {
     ssc.stop(false)
   }
 }

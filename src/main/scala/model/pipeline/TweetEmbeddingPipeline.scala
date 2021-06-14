@@ -70,8 +70,4 @@ object TweetEmbeddingPipeline {
 
     pipeline
   }
-
-//  def loadTrained(sqlContext: SQLContext): PipelineModel = {
-//      apply("text").fit(ResourceManager.loadDataset(sqlContext))
-//  }
 }
