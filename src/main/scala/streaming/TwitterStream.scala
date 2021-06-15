@@ -23,7 +23,7 @@ class TwitterStream private (val ssc: StreamingContext) {
 
 object TwitterStream {
   def apply(sparkContext: SparkContext, handler: DataHandler): TwitterStream = {
-    val ssc = new StreamingContext(sparkContext, Duration(5000))  // 5s
+    val ssc = new StreamingContext(sparkContext, Duration(2000))  // 2s
 
     val authMapOpt = ResourceManager.loadTwitterAuth()
 

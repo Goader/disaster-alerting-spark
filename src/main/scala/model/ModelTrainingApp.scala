@@ -1,8 +1,8 @@
 package model
 
 import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.{LogisticRegression, LogisticRegressionModel}
-import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
+import org.apache.spark.ml.classification.{RandomForestClassificationModel, RandomForestClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.feature.Word2VecModel
 import org.apache.spark.ml.tuning.{CrossValidator, ParamGridBuilder}
 import org.apache.spark.sql.{SparkSession, functions => f}
@@ -33,15 +33,15 @@ object ModelTrainingApp extends App {
   val pipeline = ModelPipeline("text")
 
   val paramGrid = new ParamGridBuilder()
-    .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].regParam,
-      Array(0.3, 0.1, 0.05, 0.01))
-    .addGrid(pipeline.getStages.last.asInstanceOf[LogisticRegression].elasticNetParam,
-      Array(0.0, 0.05, 0.2, 0.5, 0.8, 0.95, 1.0))
+    .addGrid(pipeline.getStages.last.asInstanceOf[RandomForestClassifier].numTrees,
+      Array(50, 100, 200, 400, 800))
+    .addGrid(pipeline.getStages.last.asInstanceOf[RandomForestClassifier].maxDepth,
+      Array(5, 8, 14, 22, 30))
     .build()
 
   val cv = new CrossValidator()
     .setEstimator(pipeline)
-    .setEvaluator(new BinaryClassificationEvaluator()
+    .setEvaluator(new MulticlassClassificationEvaluator()
                     .setLabelCol("target"))
     .setEstimatorParamMaps(paramGrid)
     .setNumFolds(5)
@@ -53,9 +53,9 @@ object ModelTrainingApp extends App {
   // best hyperparameters for the model
   val bestModel = cvModel.bestModel.asInstanceOf[PipelineModel]
   val word2VecModel = bestModel.stages.head.asInstanceOf[PipelineModel].stages.last.asInstanceOf[Word2VecModel]
-  val logRegModel = bestModel.stages.last.asInstanceOf[LogisticRegressionModel]
-  println("Regularization coef: " + logRegModel.getRegParam)
-  println("ElasticNet coef: " + logRegModel.getElasticNetParam)
+  val clfModel = bestModel.stages.last.asInstanceOf[RandomForestClassificationModel]
+  println("Number of trees: " + clfModel.getNumTrees)
+  println("Max depth: " + clfModel.getMaxDepth)
 
   val result = bestModel.transform(data)
   println("Result columns: " + result.columns.mkString(", "))
@@ -66,6 +66,6 @@ object ModelTrainingApp extends App {
   // saving the models
   // saving model to resources, so that it can be used in the application
   // it is written this way, as this file is treated as a script, not as a program
-  word2VecModel.write.overwrite.save("src/main/resources/model/word2vec_model")
-  logRegModel.write.overwrite.save("src/main/resources/model/logistic_model")
+  word2VecModel.write.overwrite.save("src/main/resources/model/word2vecrf_model")
+  clfModel.write.overwrite.save("src/main/resources/model/randomforest_model")
 }

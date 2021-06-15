@@ -1,7 +1,6 @@
 package utils
 
-import org.apache.spark.ml.PipelineModel
-import org.apache.spark.ml.classification.LogisticRegressionModel
+import org.apache.spark.ml.classification.RandomForestClassificationModel
 import org.apache.spark.ml.feature.Word2VecModel
 import org.apache.spark.sql.{DataFrame, SQLContext}
 import play.api.libs.json._
@@ -24,15 +23,15 @@ object ResourceManager {
   }
 
   def loadWord2VecModel(): Option[Word2VecModel] = {
-    val resource = getClass.getResource("/model/word2vec_model")
+    val resource = getClass.getResource("/model/word2vecrf_model")
     if (resource == null) None
     else Option(Word2VecModel.load(resource.toURI.toString))
   }
 
-  def loadModel(): Option[LogisticRegressionModel] = {
-    val resource = getClass.getResource("/model/logistic_model")
+  def loadModel(): Option[RandomForestClassificationModel] = {
+    val resource = getClass.getResource("/model/randomforest_model")
     if (resource == null) None
-    else Option(LogisticRegressionModel.load(resource.toURI.toString))
+    else Option(RandomForestClassificationModel.load(resource.toURI.toString))
   }
 
   def loadTwitterAuth(): Option[Map[TwitterAuthKeys.TwitterAuthKey, String]] = {
