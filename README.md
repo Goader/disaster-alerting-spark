@@ -1,5 +1,5 @@
 # Disaster Alerting System
- Apache Spark streaming application using Twitter4j and developer account (provides OAuth keys) to stream live tweets.
+ Apache Spark streaming application using Twitter4j and developer account (provides OAuth keys) to stream live tweets and classify them. The model predicts whether a particular tweet is informing about a disaster or not. This way, we can create an efficient Disaster Alerting System, which takes information straight from witnesses.
  
  Using NLP techniques to process tweets and create embeddings from them (numerical vectors which the machine learning algorithm can understand).
  
