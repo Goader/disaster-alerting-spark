@@ -9,3 +9,6 @@ http-client
 **/auth.json
 
 tweets*.json
+.vscode
+**.pt
+**/__pycache__
