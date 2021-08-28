@@ -11,7 +11,6 @@ import utils.ResourceManager
 object ModelPipeline {
   // using RandomForestClassifier for current model, may be changed later for performance boosting
   def apply(inputCol: String): Pipeline = {
-    // TODO load a model, join with cleaning pipelines, create a full pipeline (raw data -> prediction)
     val preprocessing = TweetPreprocessingPipeline(inputCol)
 
     // Random Forest with some default parameters that have been manually tested to be good enough
