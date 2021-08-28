@@ -1,5 +1,6 @@
 from model import Model
 
+import colorama
 from argparse import ArgumentParser
 from flask import Flask, jsonify, request
 
@@ -17,10 +18,14 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
-    print(data)
 
     cls = model.predict(data['text'])
     
+    if cls == 'not disaster':
+        print(f'  {colorama.Fore.GREEN}{data["text"]}{colorama.Style.RESET_ALL}')
+    else:
+        print(f'  {colorama.Fore.RED}{data["text"]}{colorama.Style.RESET_ALL}')
+
     return jsonify({
         'class': cls
     }), 200
