@@ -4,7 +4,7 @@
  Using NLP techniques to process tweets and classify them.
  
  [Flair](https://github.com/flairNLP/flair) framework built on PyTorch has been used to train the text classifier.
- GloVe twitter embeddings stacked with Flair embeddings ('news-forward' and 'news-backward'). The model itself is a GRU (a certain kind of RNN).
+ GloVe Twitter embeddings stacked with Flair embeddings ('news-forward' and 'news-backward'). The model itself is a GRU (a certain kind of RNN).
  The model has been trained with default hyperparameters, so they are not presented here. My goal wasn't to train the best model, but to build a working infrastructure.
  
  The dataset for training has been taken from [Kaggle](https://www.kaggle.com/c/nlp-getting-started).
